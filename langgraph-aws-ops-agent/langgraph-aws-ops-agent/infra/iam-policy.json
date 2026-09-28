@@ -1,0 +1,47 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadCloudWatch",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "cloudwatch:ListMetrics",
+        "cloudwatch:DescribeAlarms"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadCloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:StartQuery",
+        "logs:GetQueryResults"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadEC2",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceStatus"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadEKS",
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeCluster",
+        "eks:ListClusters",
+        "eks:DescribeNodegroup",
+        "eks:ListNodegroups"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

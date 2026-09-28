@@ -1,0 +1,60 @@
+services:
+
+  agent:
+    build: .
+    container_name: ops-agent
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080
+    env_file:
+      - .env
+    environment:
+      CLOUDWATCH_MCP_URL: http://cloudwatch-mcp:8001/mcp
+      EC2_MCP_URL: http://ec2-mcp:8002/mcp
+      EKS_MCP_URL: http://eks-mcp:8003/mcp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cloudwatch-mcp
+      - ec2-mcp
+      - eks-mcp
+    volumes:
+      - ${HOME}/.aws:/root/.aws:ro
+
+  cloudwatch-mcp:
+    build: .
+    container_name: cloudwatch-mcp
+    command: python -m mcp_servers.cloudwatch_server
+    env_file:
+      - .env
+    environment:
+      MCP_PORT: "8001"
+    ports:
+      - "8001:8001"
+    volumes:
+      - ${HOME}/.aws:/root/.aws:ro
+
+  ec2-mcp:
+    build: .
+    container_name: ec2-mcp
+    command: python -m mcp_servers.ec2_server
+    env_file:
+      - .env
+    environment:
+      MCP_PORT: "8002"
+    ports:
+      - "8002:8002"
+    volumes:
+      - ${HOME}/.aws:/root/.aws:ro
+
+  eks-mcp:
+    build: .
+    container_name: eks-mcp
+    command: python -m mcp_servers.eks_server
+    env_file:
+      - .env
+    environment:
+      MCP_PORT: "8003"
+    ports:
+      - "8003:8003"
+    volumes:
+      - ${HOME}/.aws:/root/.aws:ro
+      - ${HOME}/.kube:/root/.kube:ro

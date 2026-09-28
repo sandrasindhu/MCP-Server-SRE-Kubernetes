@@ -1,0 +1,33 @@
+# Learning example only.
+# Prefer EKS access entries + least-privilege RBAC in production.
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ops-readonly
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ops-readonly
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "nodes", "events", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ops-readonly
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ops-readonly
+subjects:
+  - kind: ServiceAccount
+    name: ops-readonly
+    namespace: default
